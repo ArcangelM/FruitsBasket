@@ -21,6 +21,7 @@ io.on('connection', function (socket) {
         x: Math.floor(Math.random() * 900),
         y: 450,
         playerId: socket.id,
+        playerPuntos:0,
         tipoCanasta: usuario % 4 //se quita el %4 para cuando ya este fija la partida de 4 jugadores.
     };
     
@@ -35,7 +36,7 @@ io.on('connection', function (socket) {
         io.emit('disconnect', socket.id);   // Envía un mensaje a todos los jugadores para remover a éste jugador.
     });
 
-    // Cuando un jugador se mueve, actualiza la información del jugador.
+    // Cuando un jugador se mueve, actualiza a información del jugador.
     socket.on('playerMovement', function (movementData) {
         players[socket.id].x = movementData.x;
         players[socket.id].y = movementData.y;

@@ -79,6 +79,7 @@ function create() {
         self.otherPlayers.getChildren().forEach(function (otherPlayer) {
             if (playerInfo.playerId === otherPlayer.playerId) {
                 otherPlayer.setPosition(playerInfo.x,playerInfo.y);
+                //otherPlayer.play("cami_anim");
             }
         });
     });
@@ -102,8 +103,9 @@ function update() {
     if (this.canasta) {
         // Emite el movimiento del canasta
         var x = this.canasta.x;
-        if (this.canasta.oldPosition && (x !== this.canasta.oldPosition.x)) {
-            this.socket.emit('playerMovement', {x: this.canasta.x});
+        var y = this.canasta.x;
+        if (this.canasta.oldPosition && (x !== this.canasta.oldPosition.x || y !== this.canasta.oldPosition.y )) {
+            this.socket.emit('playerMovement', {x: this.canasta.x, y: this.canasta.y});
             this.nombre.x = x - 20;
         }
     
@@ -112,11 +114,15 @@ function update() {
             x: this.canasta.x
         };
         if (this.cursors.left.isDown) {
+            //this.canasta.play("cami_anim");
             this.canasta.flipX=true;
             this.canasta.setVelocityX(-250);
+            
         } else if (this.cursors.right.isDown) {
+            //this.canasta.play("cami_anim");
             this.canasta.setVelocityX(250);
             this.canasta.flipX=false;
+            
         } else {
             this.canasta.setVelocityX(0);
         }
@@ -184,14 +190,14 @@ function addPlayer(self, playerInfo) {
 function addOtherPlayer(self, playerInfo) {
     //self.otherPlayer = self.physics.add.sprite(127, 400, 'canasta');
     if (playerInfo.tipoCanasta == 0) {
-        self.otherPlayer = self.physics.add.sprite(playerInfo.x,playerInfo.y, 'canastamanz');
+        self.otherPlayer = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'canastamanz');
     }else if(playerInfo.tipoCanasta == 1 ){
-        self.otherPlayer = self.physics.add.sprite(playerInfo.x,playerInfo.y, 'canastasandi');
+        self.otherPlayer = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'canastasandi');
     }else if(playerInfo.tipoCanasta == 2 ){
-        self.otherPlayer = self.physics.add.sprite(playerInfo.x,playerInfo.y, 'canastauvas');
+        self.otherPlayer = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'canastauvas');
         
     }else{
-       self.otherPlayer = self.physics.add.sprite(playerInfo.x,playerInfo.y, 'canasta');
+       self.otherPlayer = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'canasta');
     }
 
     self.otherPlayer.setScale(0.8);
@@ -237,7 +243,7 @@ function aumentaTiempo (tiempo){
 }
 
 function recogeFruta (fruta){
-    console.log(getCanasta())
+    
     if(getCanasta() == 0 && fruta.texture.key == "manzana"){
         puntos += 5;    //Aumento el valor de la puntuación.
     }else if(getCanasta() == 1 && fruta.texture.key == "patilla"){
